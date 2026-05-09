@@ -1,0 +1,33 @@
+name: Excelファイル生成
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  generate-excel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+
+      - name: Python セットアップ
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: openpyxl インストール
+        run: pip install openpyxl
+
+      - name: Excelファイル生成
+        run: python create_report_template.py
+
+      - name: Excelファイルをアーティファクトとしてアップロード
+        uses: actions/upload-artifact@v4
+        with:
+          name: 業務報告書_テンプレート
+          path: 業務報告書_テンプレート.xlsx
+          retention-days: 30
